@@ -6,6 +6,19 @@ Welcome to ST-SepNet's GitHub repository! This project aims to explore the appli
 
 
 
+
+
+| Model                  | Parameters | LLM Dimension |
+|------------------------|------------|---------------|
+| [BERT](https://huggingface.co/google-bert/bert-base-uncased)                   | 110M       | 768           |
+| [GPT-2](https://huggingface.co/openai-community/gpt2)               | 124M       | 768           |
+| [GPT-3](https://huggingface.co/TurkuNLP/gpt3-finnish-large)                | 7580M      | 4096          |
+| [LLAMA-1B](https://huggingface.co/meta-llama/Llama-3.2-1B)               | 1230M      | 2048          |
+| [LLAMA-7B](https://huggingface.co/huggyllama/llama-7b)               | 6740M      | 4096          |
+| [LLAMA-8B](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct)               | 8000M      | 4096          |
+| [DeepSeek-Qwen1.5B](https://huggingface.co/Qwen/Qwen2.5-Math-1.5B)      | 1500M      | 1536          |
+
+
 Our research baselines models refer to the following works and their repository code.
 
 
