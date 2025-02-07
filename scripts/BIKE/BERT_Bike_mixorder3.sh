@@ -1,4 +1,4 @@
-model_name=TIMELLM
+model_name=pool
 train_epochs=50
 learning_rate=0.0001
 llama_layers=32
