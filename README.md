@@ -39,7 +39,7 @@ The pretrained models can be downloaded from the links in the Table as below,  a
 
 
 
-## 2. Getting Start
+## 2. Main Results
 1. Download datasets and place them under `./dataset`.
 2. Download pretrained models and place them under `./huggingface`.
 
@@ -69,7 +69,9 @@ sh ./scripts/BIKE/LLAMA8B_Bike.sh
 sh ./scripts/BIKE/Deepseek_Bike.sh
 ```
 
-### 2.3 Training ST-SepNet-without LLMs (w/o) 
+
+### 3. Ablation Study
+### 3.1 ST-SepNet-without LLMs (w/o) 
 Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
 
 ```shell
@@ -117,9 +119,12 @@ accelerate launch   --mixed_precision bf16  --dynamo_backend 'no' --num_processe
 
 ```
 
+### 3.1 ST-SepNet-Mixorder 
+Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
 
 
-## 3.Further Reading 
+
+## 4.Further Reading 
 ### Our research baselines models refer to the following works and their repository code.
 
 
