@@ -122,13 +122,23 @@ accelerate launch   --mixed_precision bf16  --dynamo_backend 'no' --num_processe
 ### 3.2 ST-SepNet-Mixorder 
 Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
 
+```shell
+sh ./scripts/BIKE/BERT_Bike_mixorder3.sh
+sh ./scripts/BIKE/GPT2_Bike_mixorder3.sh
+sh ./scripts/BIKE/GPT3_Bike_mixorder3.sh
+sh ./scripts/BIKE/LLAMA1B_Bike_mixorder3.sh
+sh ./scripts/BIKE/LLAMA7B_Bike_mixorder3.sh
+sh ./scripts/BIKE/LLAMA8B_Bike_mixorder3.sh
+sh ./scripts/BIKE/Deepseek_Bike_mixorder3.sh
+```
 
 
 ### 3.3 ST-SepNet-Effective Order on Adaptive Hypergraph
 Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
+
 ```shell
 sh ./scripts/BIKE/BERT_Bike_Outflow_flexible_order3.sh
-
+sh ./scripts/PEMS/BERT_PEMS03_flexible_order.sh
 ```
 
 
