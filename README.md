@@ -14,6 +14,8 @@ The data can be obtained and downloaded from ([Google Drive](https://drive.googl
 
 ### Large Language Models
 
+The pretrained models can be downloaded from the links in the Table as below,  and makedir path ```huggingface/``` and put pretrained models in ```huggingface/```. For example, ```huggingface/BERT```
+
 | Model                  | Parameters | LLM Dimension |
 |------------------------|------------|---------------|
 | [BERT](https://huggingface.co/google-bert/bert-base-uncased)                   | 110M       | 768           |
@@ -25,7 +27,7 @@ The data can be obtained and downloaded from ([Google Drive](https://drive.googl
 | [DeepSeek-Qwen1.5B](https://huggingface.co/Qwen/Qwen2.5-Math-1.5B)      | 1500M      | 1536          |
 
 
-Our research baselines models refer to the following works and their repository code.
+### Our research baselines models refer to the following works and their repository code.
 
 
 STG4Traffic: {A} Survey and Benchmark of Spatial-Temporal Graph Neural Networks for Traffic Prediction. [[Paper]](https://arxiv.org/abs/2307.00495)[[Code]](https://github.com/trainingl/STG4Traffic?utm_source=catalyzex.com).
