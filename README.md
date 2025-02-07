@@ -40,14 +40,83 @@ The pretrained models can be downloaded from the links in the Table as below,  a
 
 
 ## 2. Getting Start
-### 2.1 Training ST-SepNet
 1. Download datasets and place them under `./dataset`.
 2. Download pretrained models and place them under `./huggingface`.
-3. Run scripts for demonstration purpose under the folder `./scripts`. To evaluate on BIKE datasets by:
+
+### 2.1 Training ST-SepNet
+Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
 
 ```shell
+sh ./scripts/BIKE/BERT_Bike_order.sh
+sh ./scripts/BIKE/GPT2_Bike_order.sh
+sh ./scripts/BIKE/GPT3_Bike_order.sh
+sh ./scripts/BIKE/LLAMA1B_Bike_order.sh
+sh ./scripts/BIKE/LLAMA7B_Bike_order.sh
+sh ./scripts/BIKE/LLAMA8B_Bike_order.sh
+sh ./scripts/BIKE/Deepseek_Bike_order.sh
+```
 
-pip install -r requirements.txt
+### 2.2 Training ST-SepNet-GNN
+Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
+
+```shell
+sh ./scripts/BIKE/BERT_Bike.sh
+sh ./scripts/BIKE/GPT2_Bike.sh
+sh ./scripts/BIKE/GPT3_Bike.sh
+sh ./scripts/BIKE/LLAMA1B_Bike.sh
+sh ./scripts/BIKE/LLAMA7B_Bike.sh
+sh ./scripts/BIKE/LLAMA8B_Bike.sh
+sh ./scripts/BIKE/Deepseek_Bike.sh
+```
+
+### 2.2 Training ST-SepNet-(w/o)
+Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
+
+```shell
+model_name=pool
+train_epochs=50
+learning_rate=0.0005
+llama_layers=32
+master_port=0
+num_process=2
+batch_size=16
+d_model=768
+d_ff=32
+comment='BERT-Bike'
+accelerate launch   --mixed_precision bf16  --dynamo_backend 'no' --num_processes $num_process  run_main.py \
+  --task_name long_term_forecast \
+  --is_training 1 \
+  --root_path ./dataset/Bike/ \
+  --data_path inflow.csv \
+  --model_id BIKE_48_48 \
+  --model $model_name \
+  --data inflow \
+  --features M \
+  --seq_len 48 \
+  --label_len 48 \
+  --pred_len 48 \
+  --factor 3 \
+  --enc_in 7 \
+  --dec_in 7 \
+  --c_out 7 \
+  --des 'Exp' \
+  --itr 1 \
+  --d_model $d_model \
+  --d_ff $d_ff \
+  --batch_size $batch_size \
+  --learning_rate $learning_rate \
+  --llm_model 'BERT' \
+  --llm_dim 768 \
+  --llm_layers $llama_layers \
+  --train_epochs $train_epochs \
+  --model_comment $comment \
+  --gamma  0.0   \
+  --fusion_gate  'hyperstgnn' \
+  --enc_in    $node_num  \
+  --dec_in   $node_num  \
+  --c_out  $node_num  \
+  --scale_hyperedges 3 \
+  >>./result//BERT_BIKEIN_48_48_hypergnn_order3.txt
 
 ```
 
