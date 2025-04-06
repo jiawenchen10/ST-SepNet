@@ -40,10 +40,50 @@ The pretrained models can be downloaded from the links in the Table as below,  a
 
 
 ## 2. Main Results
-1. Download datasets and place them under `./dataset`.
-2. Download pretrained models and place them under `./huggingface`.
+### 2.1 Training Preparation
+#### 2.1.1 Download datasets and place them under `./dataset`.
+#### 2.1.2 Download pretrained models and place them under `./huggingface`.
+#### 2.1.3 Complete list of parameters
 
-### 2.1 Training STH-SepNet
+
+| Parameter        | Type           | Description  | Default Value |
+| :-------------: |:-------------:| :-------------------------------|:-------------: |
+| `model`     | string | Name of the model, among:<br> - `pool`: SHT-SepNet model with adaptive hypergraphs module <br> - `Autoformer`: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting  (NeurIPS 2021) <br>- `TIMELLM`: Time Series Forecasting by Reprogramming Large Language Models (ICLR 2024) | `pool` |
+| `dataset`    | string      | Name of the dataset, among:<br> - `inflow`: Bike traffic flow inflow <br> - `outflow`: Bike traffic flow outflow   <br> - `PEMS03`: California Highway network PeMS traffic flow dataset <br> - `BJ`: Traffic dataset of road network in some areas of Beijing <br> - `METR`:Traffic sensor data in the Los Angeles area <br>  You can also specify any additional graph dataset, in *edgelist* format, by editing `data_loader.py`| `inflow`|
+| `node_num`| int | the node number of the network <br> -`Inflow, Outflow: 295` <br>-`PEMS03`:358  <br> -`BJ`:500 <br>-`METR`： 207| `295` |
+| `features` | string |forecasting task, options:[M, S, MS], among: <br> - `M`: multivariate predict multivariate <br> - `S`: univariate predict univariate <br> - `MS`:multivariate predict univariate <br>  | `M` |
+| `llm_model`|  string  | LLM model: `BERT，GPT2，GPT3，LLAMA1b，LLAMA7b,LLAMA8b, deepseek2b ` | `BERT` |
+| `static`                | bool   | Whether to use static adjacency matrix module        | `False`       |
+| `gcn_true`              | bool   | Whether to use GCN module                             | `True`       |
+| `adaptive_hyperhgnn`    |  string   | Hypergraph neuron network: hgcn, hgat, hsage          | `'hgcn'`      |
+| `hgcn_true`             | bool   | Whether to use HGCN module                            | `True`       |
+| `temporal_true`          | bool   | Whether to use Temporal convolutional networks Module | `True`       |
+| `fusion_gate`| string | Style of module fusion: <br>- `adaptive`:Fusion of LLMs time module and adaptive hypergraph module features，<br>-`hyperstgnn `:Only the adaptive hypergraph module features are retained | `adaptive` |
+| `llm_dim`| int | LLM model dimension <br> - `BERT, GPT2`: 768 <br> -`LLAMA7b,LLAMA8b,GPT3`: 4096 <br> - `LLAMA1b`: 2048  <br> - `deepseek2b`:1536  <br>   | `768` |
+| `seq_len`| int | input sequence length | `48` |
+| `label_len`| int | start token length | `48` |
+| `pred_len`| int | prediction sequence length | `48` |
+| `enc_in`| int | encoder input size (e.g, Node num) | `295` |
+| `dec_in`| int | decoder input size (e.g, Node num) | `295` |
+| `c_out`| int | output size (e.g, Node num) | `295`  |
+| `d_model`| int | dimension of model | `32` |
+| `n_heads`| int | num of heads | `16` |
+| `e_layers`| int | num of encoder layers | `2` |
+| `d_layers`| int | num of decoder layers | `1` |
+| `d_ff`| int | dimension of fcn | `32` |
+| `llm_layers`| int | num of llm layer  | `6` |
+| `train_epochs`          | int    | Number of training epochs                             | `50`          |
+| `align_epochs`          | int    | Number of alignment epochs                            | `10`          |
+| `alpha`                 | float  | Adjustable parameter to control hyperSTLLM or STLLM  | `0.1`         |
+| `beta`                  | float  | Adjustable parameter to control hyperSTLLM or STLLM  | `0.2`         |
+| `gamma`                 | float  | Adjustable parameter to control hyperSTLLM or STLLM  | `0.5`         |
+| `theta`                 | float  | Adjustable parameter to control hyperSTLLM or STLLM  | `0.2`         |
+| |
+
+
+
+
+### 2.2 Training STH-SepNet
 Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
 
 ```shell
@@ -56,7 +96,7 @@ sh ./scripts/BIKE/LLAMA8B_Bike_order.sh
 sh ./scripts/BIKE/Deepseek_Bike_order.sh
 ```
 
-### 2.2 Training STH-SepNet-GNN
+### 2.3 Training STH-SepNet-GNN
 Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
 
 ```shell
