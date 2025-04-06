@@ -188,7 +188,7 @@ sh ./scripts/PEMS/BERT_PEMS03_flexible_order.sh
 ## 4. Performance and Visualization
 
 <p align="center">
-<img src="img/figure02.png" height = "480" alt="" align=center />
+<img src="img/figure02.png" height = "680" alt="" align=center />
 </p>
 
 <p align="center">
