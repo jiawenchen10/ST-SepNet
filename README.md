@@ -27,15 +27,17 @@ The data can be obtained and downloaded from ([Google Drive](https://drive.googl
 
 The pretrained models can be downloaded from the links in the Table as below,  and makedir path ```huggingface/``` and put pretrained models in ```huggingface/```. For example, ```huggingface/BERT```
 
-| Model 🤗                 | Parameters | LLM Dimension | 
-|------------------------|------------|---------------|
-| [BERT](https://huggingface.co/google-bert/bert-base-uncased)                   | 110M       | 768           |  
-| [GPT-2](https://huggingface.co/openai-community/gpt2)               | 124M       | 768           | 
-| [GPT-3](https://huggingface.co/TurkuNLP/gpt3-finnish-large)                | 7580M      | 4096          | 
-| [LLAMA-1B](https://huggingface.co/meta-llama/Llama-3.2-1B)               | 1230M      | 2048          |  
-| [LLAMA-7B](https://huggingface.co/huggyllama/llama-7b)               | 6740M      | 4096          | 
-| [LLAMA-8B](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct)               | 8000M      | 4096          |   
-| [DeepSeek-Qwen1.5B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B)      | 1500M      | 1536          |
+
+| Model 🤗 | Parameters | LLM Dimension | Model Description                                                                 |
+|------------------------------------------------------------------------|------------|---------------|-----------------------------------------------------------------------------------|
+| [BERT](https://huggingface.co/google-bert/bert-base-uncased)           | 110M       | 768           | A Transformer-based pre-trained model for NLP tasks, excelling in sentence classification and question answering. |
+| [GPT-2](https://huggingface.co/openai-community/gpt2)                 | 124M       | 768           | A Transformer-based generative model, specialized in text generation and language modeling. |
+| [GPT-3](https://huggingface.co/TurkuNLP/gpt3-finnish-large)           | 7580M      | 4096          | A large-scale Transformer-based generative model supporting various language tasks. |
+| [LLAMA-1B](https://huggingface.co/meta-llama/Llama-3.2-1B)            | 1230M      | 2048          | A multilingual model developed by Meta, designed for dialogue and knowledge retrieval tasks. |
+| [LLAMA-7B](https://huggingface.co/huggyllama/llama-7b)                | 6740M      | 4096          | A multilingual model developed by Meta, suitable for various natural language generation tasks. |
+| [LLAMA-8B](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct)   | 8000M      | 4096          | A multilingual model developed by Meta, focused on dialogue and instruction-tuning tasks. |
+| [DeepSeek-Qwen1.5B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B) | 1500M      | 1536          | A reasoning-focused model enhanced through reinforcement learning for improved reasoning capabilities. |
+| |
 
 
 
