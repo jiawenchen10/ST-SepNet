@@ -4,8 +4,8 @@ from torch.nn import init
 import numbers
 import torch.nn.functional as F
 from sklearn.cluster import KMeans
-from layers.AdaGNN import hgypergraph_constructor, graph_constructor
-# from layers.HyperGNN import  HypergraphConvolution #HyperGraphAttention,
+from layers.AdaGNN import hgypergraph_constructor, graph_constructor,directedhypergraph_constructor
+from layers.HyperGNN import  HypergraphConvolution , HypergraphAttention, HypergraphSAGE
 import math
 
 
@@ -160,47 +160,6 @@ class dilated_inception(nn.Module):
 
 
 
-
-class HypergraphConvolution(nn.Module):
-    def __init__(self, in_channels, out_channels ):
-        super(HypergraphConvolution, self).__init__()
-        self.in_channels = in_channels
-        self.out_channels = out_channels
-
-        self.W = nn.Parameter(torch.Tensor(in_channels, out_channels).to(torch.bfloat16))
-        self.U = nn.Parameter(torch.Tensor(out_channels, out_channels).to(torch.bfloat16))
-        self.reset_parameters()
-
-    
-    def reset_parameters(self):
-        nn.init.xavier_uniform_(self.W)
-        nn.init.xavier_uniform_(self.U)
-    
-    def forward(self, x, H):
-        '''
-        :param: x: BLFN   bffloat16
-        :param: H: hypergraph matrix shape (n,m)  bffloat16
-        '''
-        device = self.W.device  # avoid calculating at two device 
-        x = x.to(device)
-        H = H.to(device)
-        # Node to hyperedge information aggregation 
-        x = torch.matmul(x, self.W)  # (B, L, N, F) ->(B, L, N, F)
-        x = torch.einsum('nm, blnf->blmf', H, x)  # (N, M), (B, L, N, F') -> (B, L, M, F')
-        # information transformation on hyperedges
-        x = F.relu(torch.matmul(x,self.U))  # (B, L, M, F') -> (B, L, M, F')
-        # Hyperedges to Node information aggregation
-        x_out = torch.einsum('mn,blmf->blnf',  H.t(), x) #  (N, M), (B, L, M, F') -> (B, L, N, F')
-        return x_out
-
-
-
-
-
-
-
-
-
 class LayerNorm(nn.Module):
     __constants__ = ['normalized_shape', 'weight', 'bias', 'eps', 'elementwise_affine']
     def __init__(self, normalized_shape, eps=1e-5, elementwise_affine=True):
@@ -238,22 +197,26 @@ class LayerNorm(nn.Module):
 
 class sthypergnn(nn.Module):
     def __init__(self, gcn_true, hgcn_true, hgat_true, buildA_true,buildH_true, gcn_depth, 
-                 num_nodes,num_hyperedges, device, predefined_A=None, static_feat=None, dropout=0.3, 
+                 num_nodes,num_hyperedges, device, adaptive_hyperhgnn,temporl_true,static,  predefined_A=None, static_feat=None, dropout=0.3, 
                  subgraph_size=20, node_dim=40, dilation_exponential=1,  conv_channels=32,
                    residual_channels=32, skip_channels=64, end_channels=128,  seq_length=12, 
                    in_dim=2, out_dim=12, layers=3, propalpha=0.05, tanhalpha=3,  layer_norm_affline=True, 
-                   true_adj = 0, scale_hyperedges=10, alpha = 0.1, beta = 0.3, gamma = 0.5):
+                   true_adj = 0, scale_hyperedges=10, alpha = 0.1, beta = 0.3, gamma = 0.5, theta=0.2):
         super(sthypergnn, self).__init__()
         self.gcn_true = gcn_true
         self.buildA_true = buildA_true
         self.hgcn_true = hgcn_true
         self.hgat_true = hgat_true
         self.buildH_true = buildH_true
+        self.adaptive_hyperhgnn = adaptive_hyperhgnn
+        self.temporl_true = temporl_true 
+        self.static = static
 
         self.gamma = nn.Parameter(torch.tensor(gamma, dtype=torch.bfloat16))
         self.alpha = nn.Parameter(torch.tensor(alpha, dtype=torch.bfloat16))
         self.beta = nn.Parameter(torch.tensor(beta, dtype=torch.bfloat16))
-        self.param = self.gamma + self.alpha + self.beta
+        self.theta = nn.Parameter(torch.tensor(theta , dtype=torch.bfloat16))
+        self.param = self.gamma + self.alpha + self.beta + self.theta 
 
 
         self.num_nodes = num_nodes
@@ -360,6 +323,7 @@ class sthypergnn(nn.Module):
 
     def forward(self, input, idx=None):
         seq_len = input.size(3)
+        
         assert seq_len==self.seq_length, 'input sequence length not equal to preset sequence length'
 
         if self.seq_length<self.receptive_field:
@@ -392,46 +356,64 @@ class sthypergnn(nn.Module):
 
 
         x = self.start_conv(input)
+        
         skip = self.skip0(F.dropout(input, self.dropout, training=self.training))
         for i in range(self.layers):
 
-            # TCN Module
+            # Temporal convolutional networks Module
 
             residual = x
-            filter = self.filter_convs[i](x)
-            filter = torch.tanh(filter)
-            gate = self.gate_convs[i](x)
-            gate = torch.sigmoid(gate)
+            
+            if self.temporl_true:
+                filter = self.filter_convs[i](x)
+                
+                filter = torch.tanh(filter)
+                gate = self.gate_convs[i](x)
+                gate = torch.sigmoid(gate)
 
-            x = filter * gate
-            x = F.dropout(x, self.dropout, training=self.training).to(torch.bfloat16)
-    
+                x = filter * gate
+                x = F.dropout(x, self.dropout, training=self.training).to(torch.bfloat16)
+            else:
+                x = self.filter_convs[i](x)
+
             s = x.to(torch.bfloat16)
             s = self.skip_convs[i](s)
             skip = s + skip
             
-            # SHCN Module：Spatio-Temporal HGCN
+            # Adaptive Hypergraph Module：Spatio- HGCN
             true_adj = self.true_adj.to(x.device)
+
+
             # GCN Module
-            if self.gcn_true:
-                x1 = self.gconv1[i](x, adp)+self.gconv2[i](x, adp.transpose(1,0))  # + self.gconv3[i](x, true_adj)   # BLNF*NN = BLNF
+
+            if self.static:
+                x1  =  self.gconv3[i](x, true_adj)  # BLNF*NN = BLNF
+            elif self.gcn_true:
+                x1 = self.gconv1[i](x, adp) +  self.gconv2[i](x, adp.transpose(1,0))   # BLNF*NN = BLNF
+
             else:
                 x1 = self.residual_convs[i](x)
+            
 
             # HGCN Module
-            if self.hgcn_true:
-                b,l,f,n = x.shape
-                hypergraph_conv = HypergraphConvolution(in_channels=n, out_channels=n)
-                x2 =  hypergraph_conv(x, hadp)
-            else:
-                x2 = self.residual_convs[i](x)
+            b,l,f,n = x.shape
+            if self.hgcn_true: 
+                if self.adaptive_hyperhgnn == 'hgcn':
+                    hypergraph_convlayer = HypergraphConvolution(in_channels=n, out_channels=n)
+                    x2 =  hypergraph_convlayer(x, hadp)     
+                elif self.adaptive_hyperhgnn == 'hgat':     
+                    hypergraph_gatlayer = HypergraphAttention(in_channels=n, out_channels=n)
+                    x2 = hypergraph_gatlayer(x, hadp)    
+                elif self.adaptive_hyperhgnn == 'hsage':                
+                    hypergraph_sagelayer = HypergraphSAGE(in_channels=n, out_channels=n)
+                    x2  = hypergraph_sagelayer(x, hadp)
+                else:
+                    x2 = self.residual_convs[i](x)
 
-            # Fusion of GCN and HGCN
-
-            if self.hgcn_true:
-                x = self.gamma* x1 + (1-self.gamma)* x2.to(x1.device)
+                x = self.gamma* x1 +  (1 - self.gamma)* x2.to(x1.device) 
             else:
                 x = x1
+
 
             x = x + residual[:, :, :, -x.size(3):]
             if idx is None:
