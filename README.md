@@ -165,7 +165,7 @@ The fusion mechanism can be specified using the `--fusion_gate` argument. The av
 
 
 <p align="center">
-<img src="img/tableb6.png" height = "190" alt="" align=center />
+<img src="img/tableb6.png" height = "175" alt="" align=center />
 </p>
 
 
