@@ -160,12 +160,12 @@ The fusion mechanism can be specified using the `--fusion_gate` argument. The av
 
 
 <p align="center">
-<img src="img/tableb5.png" height = "180" alt="" align=center />
+<img src="img/tableb5.png" height = "200" alt="" align=center />
 </p>
 
 
 <p align="center">
-<img src="img/tableb6.png" height = "120" alt="" align=center />
+<img src="img/tableb6.png" height = "200" alt="" align=center />
 </p>
 
 
