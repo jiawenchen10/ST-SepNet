@@ -110,8 +110,8 @@ sh ./scripts/BIKE/Deepseek_Bike.sh
 
 
 ### 3. Ablation Study
-### 3.1 STH-SepNet-without LLMs (w/o) 
-For example, to evaluate on BIKE datasets, Set fusion_gate as 'hyperstgnn'. Note that fully integrated adaptive hypergraph spatio-temporal prediction(without LLMs)
+### 3.1 STH-SepNet-without LLMs (w/o) (Undecoupled Version)
+For example, to evaluate on BIKE datasets, Set `--fusion_gate`  as `hyperstgnn`. Note that fully integrated adaptive hypergraph spatio-temporal prediction(without LLMs)
 
 ### 3.2 STH-SepNet-Mixorder 
 Run scripts for demonstration purpose under the folder `./scripts`. For example, to evaluate on BIKE datasets by:
@@ -135,7 +135,13 @@ sh ./scripts/BIKE/BERT_Bike_Outflow_flexible_order3.sh
 sh ./scripts/PEMS/BERT_PEMS03_flexible_order.sh
 ```
 
+### 3.4 STH-SepNet-Fusion Mechanism between Spatio and Temporal Features
+The fusion mechanism can be specified using the `--fusion_gate` argument. The available options are:
 
+- adaptive: Dynamically adjusts the weight of time and spatial features.
+- attentiongate: Considers the internal relationship between the two features.
+- lstmgate: Captures the dependence of space on temporal features.
+- hyperstgnn: Fully integrated adaptive hypergraph spatio-temporal prediction (without LLMs).
 
 ## 4. Performance and Visualization
 
