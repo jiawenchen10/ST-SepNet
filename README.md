@@ -174,7 +174,7 @@ The fusion mechanism can be specified using the `--fusion_gate` argument. The av
 
 If you find this repository helpful for your research, please cite our paper. 
 
-```
+```tex
 @inproceedings{chen2025decoupling,
   title={Decoupling Spatio-Temporal Prediction: When Lightweight Large Models Meet Adaptive Hypergraphs},
   author={Chen, Jiawen and Shao, Qi and Chen, Duxin and Yu, Wwenwu},
