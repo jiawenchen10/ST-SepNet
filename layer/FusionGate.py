@@ -16,7 +16,13 @@ class AdaptiveGate(nn.Module):
         # dec_out: (B, N, F)
         # sthgnn_enc: (B, N, F)
         combined_input = torch.cat((semantics_out, sthgnn_enc), dim=-1)  # (B, L, 2N)
-        gate_values = self.gate_net(combined_input)  # (B, L, 2N)
+        gate_values = self.gate_net(combined_input)  # (B, L, 2N)\
+
+
+
+
+
+        
 
         fused_output = gate_values * semantics_out + (1 - gate_values) * sthgnn_enc  # (B, N, F)
         #fused_output = dec_out_expanded + gate_values * torch.relu(mtgnn_enc)

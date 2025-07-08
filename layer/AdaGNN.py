@@ -271,7 +271,7 @@ class hgypergraph_constructor(nn.Module):
         self.nnodes = nnodes
         self.num_hyperedges = num_hyperedges
         self.device = device
-        self.dim = dim  # 输入维度
+        self.dim = dim  # input dimension
         self.alpha = alpha  
         self.static_feat = static_feat
         self.max_nodes_per_hyperedge = max_nodes_per_hyperedge 
