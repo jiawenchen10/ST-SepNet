@@ -15,7 +15,7 @@ Welcome to STH-SepNet's GitHub repository! This repository hosts the code, data 
 
   
 <p align="center">
-<img src="img/model.png" height = "480" alt="" align=center />
+<img src="img/poster.png" height = "480" alt="" align=center />
 </p>
 
 
